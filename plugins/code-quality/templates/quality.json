@@ -1,0 +1,18 @@
+{
+  "_comment": "code-quality config. Edit `gates` to point at your project's real tools. `{files}` is replaced with the matched, changed files. `blocking: true` fails the gate on a non-zero exit; `false` is report-only. Delete the example gates you don't use.",
+  "standards": ".devkit/standards.md",
+  "gates": [
+    {
+      "name": "ruff",
+      "files": "**/*.py",
+      "command": "ruff check {files}",
+      "blocking": true
+    },
+    {
+      "name": "eslint",
+      "files": "**/*.{ts,tsx,js,jsx}",
+      "command": "eslint {files}",
+      "blocking": false
+    }
+  ]
+}

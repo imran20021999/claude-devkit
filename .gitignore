@@ -1,0 +1,4 @@
+node_modules/
+
+# journal-logger transient staging (never commit)
+.devkit/journal/.staging/

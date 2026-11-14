@@ -1,0 +1,8 @@
+{
+  "name": "code-quality",
+  "version": "0.1.0",
+  "description": "Language-agnostic coding standards, an on-demand quality review, and automated lint/format/type gates driven by a single project config.",
+  "author": {
+    "name": "claude-devkit"
+  }
+}

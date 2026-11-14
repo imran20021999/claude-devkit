@@ -1,0 +1,17 @@
+{
+  "name": "claude-devkit",
+  "owner": {
+    "name": "claude-devkit"
+  },
+  "metadata": {
+    "description": "A standalone, general-purpose developer kit for Claude Code: write, review, deploy, maintain, and debug. Phase one ships code-quality.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "code-quality",
+      "source": "./plugins/code-quality",
+      "description": "Language-agnostic coding standards, an on-demand quality review command, and automated lint/format/type gates via config."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "standards": ".devkit/standards.md",
+  "gates": [
+    {
+      "name": "py-lint",
+      "files": "**/*.py",
+      "command": "node tools/fake-lint.mjs {files}",
+      "blocking": true
+    },
+    {
+      "name": "ts-lint",
+      "files": "**/*.ts",
+      "command": "node tools/fake-lint.mjs {files}",
+      "blocking": false
+    }
+  ]
+}
