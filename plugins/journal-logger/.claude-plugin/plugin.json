@@ -1,0 +1,8 @@
+{
+  "name": "journal-logger",
+  "version": "0.1.0",
+  "description": "An always-on, per-project journal of every change Claude makes — code, deploy, and infra — with cross-session recall.",
+  "author": {
+    "name": "claude-devkit"
+  }
+}

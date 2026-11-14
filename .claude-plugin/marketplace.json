@@ -12,6 +12,11 @@
       "name": "code-quality",
       "source": "./plugins/code-quality",
       "description": "Language-agnostic coding standards, an on-demand quality review command, and automated lint/format/type gates via config."
+    },
+    {
+      "name": "journal-logger",
+      "source": "./plugins/journal-logger",
+      "description": "An always-on, per-project journal of every change Claude makes (code, deploy, infra), with cross-session recap."
     }
   ]
 }
