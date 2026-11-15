@@ -7,6 +7,7 @@ import {
   buildCommand,
   runGates,
   normalizePath,
+  evaluateMaxLines,
 } from '../../plugins/code-quality/hooks/run-gates.mjs';
 
 test('normalizePath converts backslashes and strips leading ./', () => {
@@ -105,6 +106,31 @@ test('runGates: passing gate is ok', async () => {
   const { results, blockingFailed } = await runGates({ config, files: ['a.py'], exec });
   assert.equal(blockingFailed, false);
   assert.equal(results[0].ok, true);
+});
+
+test('evaluateMaxLines flags files over the limit', () => {
+  const r = evaluateMaxLines([{ file: 'a.py', lines: 600 }, { file: 'b.py', lines: 100 }], { limit: 500 });
+  assert.equal(r.ok, false);
+  assert.equal(r.offenders.length, 1);
+  assert.equal(r.offenders[0].file, 'a.py');
+  assert.equal(r.blocking, false);
+  assert.match(r.output, /a\.py: 600 lines/);
+});
+
+test('evaluateMaxLines is ok when all files are under the limit', () => {
+  const r = evaluateMaxLines([{ file: 'a.py', lines: 100 }], { limit: 500 });
+  assert.equal(r.ok, true);
+  assert.equal(r.offenders.length, 0);
+});
+
+test('evaluateMaxLines respects the files glob', () => {
+  const r = evaluateMaxLines([{ file: 'a.md', lines: 999 }], { limit: 500, files: '**/*.py' });
+  assert.equal(r.ok, true); // .md not matched
+});
+
+test('evaluateMaxLines honors the blocking flag', () => {
+  const r = evaluateMaxLines([{ file: 'a.py', lines: 600 }], { limit: 500, blocking: true });
+  assert.equal(r.blocking, true);
 });
 
 test('runGates: only matched files are passed to the command', async () => {

@@ -11,8 +11,8 @@
  * The pure helpers below are exported for unit testing; nothing runs on import.
  */
 
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, existsSync } from 'node:fs';
+import { join, isAbsolute } from 'node:path';
 import { spawn } from 'node:child_process';
 
 /** Normalize a path for glob matching: backslashes -> slashes, strip a leading `./`. */
@@ -117,15 +117,53 @@ export async function runGates({ config, files, exec }) {
   return { results, blockingFailed };
 }
 
+export const DEFAULT_MAX_LINES = { enabled: true, limit: 500, files: '**/*', blocking: false };
+
+/**
+ * Built-in, language-agnostic max-lines check.
+ * @param {{file:string, lines:number}[]} fileLineCounts
+ * @param {{limit?:number, blocking?:boolean, files?:string}} opts
+ */
+export function evaluateMaxLines(fileLineCounts, opts = {}) {
+  const limit = opts.limit ?? DEFAULT_MAX_LINES.limit;
+  const re = globToRegExp(opts.files || DEFAULT_MAX_LINES.files);
+  const offenders = fileLineCounts.filter((f) => re.test(normalizePath(f.file)) && f.lines > limit);
+  return {
+    name: 'max-lines',
+    ok: offenders.length === 0,
+    blocking: Boolean(opts.blocking),
+    offenders,
+    output: offenders.map((o) => `${o.file}: ${o.lines} lines (limit ${limit})`).join('\n'),
+  };
+}
+
 // ---- runtime-only helpers (not exercised by unit tests) ----
 
 function loadConfig(cwd) {
+  let user = {};
   try {
-    const raw = readFileSync(join(cwd, '.devkit', 'quality.json'), 'utf8');
-    return JSON.parse(raw);
+    user = JSON.parse(readFileSync(join(cwd, '.devkit', 'quality.json'), 'utf8'));
   } catch {
-    return null;
+    user = {};
   }
+  return {
+    gates: Array.isArray(user.gates) ? user.gates : [],
+    maxLines:
+      user.maxLines === false ? { enabled: false } : { ...DEFAULT_MAX_LINES, ...(user.maxLines || {}) },
+  };
+}
+
+function countLinesFor(files, cwd) {
+  const out = [];
+  for (const f of files) {
+    try {
+      const abs = isAbsolute(f) ? f : join(cwd, f);
+      out.push({ file: f, lines: readFileSync(abs, 'utf8').split('\n').length });
+    } catch {
+      /* unreadable; skip */
+    }
+  }
+  return out;
 }
 
 function shellExec(cwd) {
@@ -158,15 +196,10 @@ function readStdin() {
 
 function report(results) {
   for (const r of results) {
-    const status = r.ok ? 'pass' : r.blocking ? 'FAIL' : 'warn';
-    const line = `[code-quality] ${status}: ${r.name}`;
-    if (r.ok) {
-      console.log(line);
-    } else {
-      const stream = r.blocking ? console.error : console.log;
-      stream(line);
-      if (r.output) stream(r.output);
-    }
+    if (r.ok) continue; // stay quiet on passes; this hook fires on every edit
+    const stream = r.blocking ? console.error : console.log;
+    stream(`[code-quality] ${r.blocking ? 'FAIL' : 'warn'}: ${r.name}`);
+    if (r.output) stream(r.output);
   }
 }
 
@@ -192,17 +225,23 @@ async function main() {
   }
 
   if (files.length === 0) process.exit(0);
+  // Only act inside a project, not an arbitrary directory.
+  if (!existsSync(join(cwd, '.git')) && !existsSync(join(cwd, '.devkit'))) process.exit(0);
 
   const config = loadConfig(cwd);
-  if (!config || !Array.isArray(config.gates) || config.gates.length === 0) process.exit(0);
+  const results = [];
 
-  const { results, blockingFailed } = await runGates({
-    config,
-    files,
-    exec: shellExec(cwd),
-  });
+  if (config.gates.length > 0) {
+    const r = await runGates({ config, files, exec: shellExec(cwd) });
+    results.push(...r.results);
+  }
+  if (config.maxLines?.enabled) {
+    results.push(evaluateMaxLines(countLinesFor(files, cwd), config.maxLines));
+  }
+
+  if (results.length === 0) process.exit(0);
   report(results);
-  process.exit(blockingFailed ? 2 : 0);
+  process.exit(results.some((r) => !r.ok && r.blocking) ? 2 : 0);
 }
 
 // Run only when invoked directly, never on import.

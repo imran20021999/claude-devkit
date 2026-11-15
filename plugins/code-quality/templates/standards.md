@@ -29,6 +29,16 @@
 <!-- Anything reviewers in this repo should always check. e.g. "Any new env var must be documented
      in README and added to .env.example." -->
 
+## SOLID & size (baked-in defaults)
+
+These are checked by default in `/quality-review` and the coding-standards skill. Tune or remove any
+that don't fit this project.
+
+- **SOLID** — single responsibility, open/closed, Liskov substitution, interface segregation,
+  dependency inversion.
+- **Size** — file ≤ 500 lines (the max-lines gate warns past this), function ≤ 50 lines,
+  ≤ 4 parameters, nesting depth ≤ 3.
+
 ## Exceptions
 
 <!-- Document intentional deviations from the defaults so reviewers don't re-flag them. -->

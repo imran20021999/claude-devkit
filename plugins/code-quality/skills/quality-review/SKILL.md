@@ -28,6 +28,8 @@ Produce a rigorous, actionable review of a set of changes and a single verdict.
    - **Security** — unvalidated input, injection, secrets in code, unsafe deserialization, missing authz.
    - **Smells & complexity** — functions doing too much, deep nesting, unclear names, dead code.
    - **Duplication** — repeated logic that should be factored.
+   - **SOLID** — single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion (see the coding-standards skill for the signal to flag for each).
+   - **Size thresholds** — flag files > 500 lines, functions > 50 lines, > 4 parameters, or nesting deeper than 3.
    - **Standards violations** — anything contradicting the standards.
 5. **Rank findings by severity** (see below) and attach `file:line`.
 

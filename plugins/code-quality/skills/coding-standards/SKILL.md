@@ -23,6 +23,14 @@ Before applying the defaults, check for `.devkit/standards.md` in the project ro
 - Prefer small, focused files. A file that keeps growing is a signal it's doing too much.
 - Keep nesting shallow — return early instead of deepening `if` ladders.
 - Make illegal states unrepresentable where the language allows it.
+- Size guides: file ≤ 500 lines (enforced by the max-lines gate), function ≤ 50 lines, ≤ 4 parameters, nesting depth ≤ 3. Flag breaches; they are thresholds, not hard failures.
+
+### SOLID
+- **S — Single Responsibility:** a unit has one reason to change. Flag a class/function doing several unrelated things.
+- **O — Open/Closed:** extend behavior without editing existing code. Flag a growing type switch that must be edited for each new case (prefer polymorphism/strategy).
+- **L — Liskov Substitution:** a subtype must work anywhere its base type does. Flag overrides that throw, no-op, or strengthen preconditions.
+- **I — Interface Segregation:** prefer small, specific interfaces. Flag fat interfaces that force clients to depend on methods they don't use.
+- **D — Dependency Inversion:** depend on abstractions, not concretions. Flag high-level code that instantiates concrete low-level clients directly instead of receiving an injected abstraction.
 
 ### Error handling
 - Handle errors where you can act on them; don't swallow them silently.

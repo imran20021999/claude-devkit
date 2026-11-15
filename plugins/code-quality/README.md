@@ -4,10 +4,10 @@ Language-agnostic coding standards, an on-demand quality review, and automated l
 
 ## What you get
 
-- **`coding-standards` skill** — house conventions Claude reads *before* writing or reviewing code. Ships sensible defaults; layer your own rules via `.devkit/standards.md`.
+- **`coding-standards` skill** — house conventions Claude reads *before* writing or reviewing code, including the **SOLID principles** and size thresholds (file ≤ 500, function ≤ 50, ≤ 4 params, nesting ≤ 3). Ships sensible defaults; layer your own via `.devkit/standards.md`.
 - **`/quality-review`** — reviews the current diff (or a file/dir/PR): runs your configured gates, then a semantic review against the standards, and prints a verdict with ranked findings. `--fix` applies only safe, mechanical fixes.
 - **`/quality-init`** — scaffolds `.devkit/quality.json` and `.devkit/standards.md` into the current project (never overwrites existing files).
-- **Automated gates** — a `PostToolUse` hook runs your configured linters/formatters/type-checkers on files as they change.
+- **Automated gates** — a `PostToolUse` hook runs your configured linters/formatters/type-checkers on files as they change, plus a built-in **max-lines** gate (default 500 lines, warn-only).
 
 ## Setup
 
