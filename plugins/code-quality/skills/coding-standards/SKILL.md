@@ -11,6 +11,10 @@ Apply these conventions whenever you write or review code. They are **language-a
 
 Before applying the defaults, check for `.devkit/standards.md` in the project root. If it exists, read it. Treat it as the source of truth for this project; the defaults below fill the gaps it leaves.
 
+## Step 0.5 — Load language guides
+
+This plugin ships language-specific guides in its `standards/` directory — `typescript.md`, `go.md`, `react.md`, `python.md`. When the code is in one of these languages, also apply the matching guide on top of the defaults below.
+
 ## Defaults
 
 ### Naming
