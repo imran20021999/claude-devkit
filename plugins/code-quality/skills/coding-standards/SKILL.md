@@ -13,7 +13,7 @@ Before applying the defaults, check for `.devkit/standards.md` in the project ro
 
 ## Step 0.5 — Load language guides
 
-This plugin ships language-specific guides in its `standards/` directory — `typescript.md`, `go.md`, `react.md`, `python.md`. When the code is in one of these languages, also apply the matching guide on top of the defaults below.
+This plugin ships language-specific guides in its `standards/` directory (TypeScript, Go, React, Python, Java, C#, Rust, C/C++, JavaScript, Ruby, PHP, Bash, Lua, Kotlin, Swift, Dart, Vue, Svelte, Angular, HTML, CSS, Markdown, YAML, JSON, TOML, Dockerfile, Terraform, SQL). When the code matches a guide, read it and apply it on top of the defaults below.
 
 ## Defaults
 
