@@ -50,6 +50,12 @@ Run by the `PostToolUse` hook (`run-gates.mjs`) and by `/quality-review`.
 ### Duplication / reusability
 - Repeated logic that should be factored into a common function.
 
+### Silent failures
+- Swallowed exceptions (empty/`pass` catch), ignored error returns, unhandled promise rejections, or errors logged-and-continued where the code should stop.
+
+### Test coverage of the change
+- Behavior changed but no test added/updated (`codeWithoutTests`) — flagged, weighted by risk.
+
 ### Naming
 - Descriptive; booleans read as predicates (`isReady`); verbs for functions, nouns for values; one
   concept, one name across the codebase.
@@ -76,6 +82,15 @@ Run by the `PostToolUse` hook (`run-gates.mjs`) and by `/quality-review`.
 
 ---
 
+## B.1 Evidence Gate (how findings are filtered)
+
+Every reported finding must clear the gate: **≥80% confidence**, a cited `file:line`, a **concrete
+failure scenario**, and a check that surrounding code doesn't already guard it. CRITICAL/HIGH findings
+also state why existing guards miss it. **Zero findings is a valid result** — the review won't invent
+problems, and skips style a linter handles, generated/vendored code, and pre-existing issues outside
+the diff. The review's inputs (base branch — never hardcoded, changed files, tests-touched) come from
+the deterministic `review-context.mjs` helper.
+
 ## C. Verdict scale (`/quality-review`)
 
 | Verdict | Meaning |
@@ -94,3 +109,4 @@ Run by the `PostToolUse` hook (`run-gates.mjs`) and by `/quality-review`.
 - **New hard rules** (complexity, import boundaries, formatting) → add the enforcing linter as a
   **gate** in `.devkit/quality.json`.
 - **Tuning** — adjust `maxLines`, enable/disable types, and edit the standards file per project.
+- **Language guides** — per-language best practices live in this plugin's `standards/` directory and are layered on automatically by the language(s) in the diff.

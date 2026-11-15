@@ -4,8 +4,8 @@ Language-agnostic coding standards, an on-demand quality review, and automated l
 
 ## What you get
 
-- **`coding-standards` skill** — house conventions Claude reads *before* writing or reviewing code, including the **SOLID principles** and size thresholds (file ≤ 500, function ≤ 50, ≤ 4 params, nesting ≤ 3). Ships sensible defaults; layer your own via `.devkit/standards.md`.
-- **`/quality-review`** — reviews the current diff (or a file/dir/PR): runs your configured gates, then a semantic review against the standards, and prints a verdict with ranked findings. `--fix` applies only safe, mechanical fixes.
+- **`coding-standards` skill** — house conventions Claude reads *before* writing or reviewing code, including the **SOLID principles** and size thresholds (file ≤ 500, function ≤ 50, ≤ 4 params, nesting ≤ 3). Ships sensible defaults; layer your own via `.devkit/standards.md`. Includes per-language guides in [`standards/`](standards) for ~28 languages (TS, Go, Python, Java, C#, Rust, C/C++, JS, Ruby, PHP, Bash, Lua, Kotlin, Swift, Dart, Vue, Svelte, Angular, HTML, CSS, Markdown, YAML, JSON, TOML, Dockerfile, Terraform, SQL).
+- **`/quality-review`** — **evidence-backed** review of the current diff (or a file/dir/PR): a deterministic context helper detects the base branch (never hardcodes `main`) and whether tests were touched; then a semantic review across correctness, security, silent failures, test-coverage-of-change, SOLID, duplication, and standards. Every finding must clear an **Evidence Gate** (≥80% confidence, `file:line`, a concrete failure scenario) — zero findings is a valid result. Emits a verdict, writes a report, and (with `--post`) can publish to a PR. `--fix` applies only safe fixes.
 - **`/quality-init`** — scaffolds `.devkit/quality.json` and `.devkit/standards.md` into the current project (never overwrites existing files).
 - **Automated gates** — a `PostToolUse` hook runs your configured linters/formatters/type-checkers on files as they change, plus a built-in **max-lines** gate (default 500 lines, warn-only).
 
