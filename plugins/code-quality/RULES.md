@@ -110,3 +110,14 @@ the deterministic `review-context.mjs` helper.
   **gate** in `.devkit/quality.json`.
 - **Tuning** — adjust `maxLines`, enable/disable types, and edit the standards file per project.
 - **Language guides** — per-language best practices live in this plugin's `standards/` directory and are layered on automatically by the language(s) in the diff.
+
+## E. Pull-request standards (`/pr-review`)
+
+- **Title** must start with a Conventional Commit type — `feat:` (feature), `fix:` (bug fix), or `refactor:`/`perf:`/`docs:`/`test:`/`build:`/`ci:`/`chore:`/`revert:`.
+- **Description** must substantively explain *what changed and why*, covering every significant change in the diff — not a one-liner.
+- **Breaking changes** must be signalled (`feat!:` / `BREAKING CHANGE:`) and explained with impact + migration path.
+- **Docs** should be updated when behavior or usage changes (code changed with no docs touched is flagged).
+- **PR template** — if the repo has one, its sections must be filled and `<!-- … -->` placeholders removed (a recommended template ships in `templates/PULL_REQUEST_TEMPLATE.md`).
+- **Commit messages** follow Conventional Commits; a linked issue is encouraged.
+- **CI green, branch mergeable** — `/pr-review` caps the verdict at `NEEDS_WORK` on failing CI or conflicts.
+- `/pr-review` posts only with `--post`, and never approves or merges on its own.
